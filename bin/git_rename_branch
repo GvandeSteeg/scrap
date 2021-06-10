@@ -1,0 +1,19 @@
+#!/bin/bash
+
+OLD=$1
+NEW=$2
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <old branch> <new branch>"
+  exit 1
+fi
+
+# 1. Rename your local branch.
+git branch -m ${OLD} ${NEW}
+
+# 2. Delete the old-name remote branch and push the new-name local branch.
+git push origin :${OLD} ${NEW}
+
+# 3. Reset the upstream branch for the new-name local branch.
+git checkout ${NEW} && git push origin -u ${NEW}
+
