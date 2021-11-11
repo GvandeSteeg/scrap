@@ -2,7 +2,7 @@
 
 ####################################################################################################################################################
 #  This script replaces all instances of <replace:VARIABLE> with the value stored in the environment variable $VARIABLE (as specified in the tag)  #
-#  Please ensure that any variables stored are unique to that file or set of files if they're allowed to share a value                              #
+#  Please ensure that any variables stored are unique to that file or set of files if they're allowed to share a value                             #
 ####################################################################################################################################################
 
 folder=${1:-../}
