@@ -4,13 +4,18 @@ import urllib.request as urlrequest
 from urllib.error import URLError
 
 from selenium import webdriver
-from selenium.common import NoSuchElementException
+from selenium.common import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.by import By
+from retry import retry
 
 FOLDER = "downloads"
 TO_SKIP = "to_skip.txt"
 
 to_download = []
+
+@retry(WebDriverException, 5)
+def get(driver, url):
+    driver.get(url)
 
 
 async def download(url, filename):
@@ -48,7 +53,7 @@ with webdriver.Chrome() as driver:
             if "library" in product or product in to_skip:
                 continue
 
-            driver.get(product)
+            get(driver, product)
             mainfolder = driver.find_element(
                 By.XPATH, "/html/body/div[1]/div/div/div[3]/div/div/div/div/div/div/h1"
             ).text
@@ -68,7 +73,7 @@ with webdriver.Chrome() as driver:
             categories = sorted(categories)
 
             for category in categories:
-                driver.get(category)
+                get(driver, category)
 
                 try:
                     downloads = driver.find_element(
@@ -78,12 +83,11 @@ with webdriver.Chrome() as driver:
                     continue
 
                 subfolder = driver.find_element(By.CLASS_NAME, "panel__title").text
+                subfolder.replace('"', "'")
                 path = os.path.join(mainfolder, subfolder)
                 os.makedirs(path, exist_ok=True)
 
                 for d in downloads:
-                    if not d.text.endswith("zip"):
-                        continue
                     with open("run.sh", "a") as f:
                         f.write(
                             f'wget "{d.get_attribute("href")}" -O "{path}/{d.text}" &\n'
