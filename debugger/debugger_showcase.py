@@ -16,7 +16,7 @@ def fasta_parser(fasta_path: str) -> Dict[str, str]:
 
 
 def reverse_complement(seq_string: str) -> str:
-    compl = dict(A='T', T='A', G='C', C='G')
+    compl = dict(A="T", T="A", G="C", C="G")
     new_str = [compl[i.upper()] for i in seq_string]
     return "".join(new_str)
 
