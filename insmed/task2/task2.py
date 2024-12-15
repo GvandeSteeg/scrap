@@ -46,20 +46,27 @@ def calculate_three_of_a_kind(play: list[int]):
 
     return play, score
 
+
 def calculate_straight(play: list[int]):
     """this has to be 1-5 or 2-6 to match the N>4 criteria"""
     str_play = "".join(map(str, play))
     # I know this isn't scalable for 7+ throws, but I've spent way too long on this already
-    straights = ("12345", "23456")  # You could do something fun with range and len to generate a list of straights of N length though
+    straights = (
+        "12345",
+        "23456",
+    )  # You could do something fun with range and len to generate a list of straights of N length though
 
     remainders = []
     for straight in straights:
         if straight in str_play:
-            remainders.append(int("".join(str_play.split(straight))))  # This will isolate the non-straight value
+            remainders.append(
+                int("".join(str_play.split(straight)))
+            )  # This will isolate the non-straight value
 
     if remainders:
         return remainders, 1500
     return play, 0
+
 
 def calculate_remainder(play: list[int]):
     """We only count 1 or 5"""
@@ -72,16 +79,22 @@ def calculate_remainder(play: list[int]):
 
     return [x for x in play if x not in (1, 5)], score
 
+
 def calculate_total_score(play: list[int]):
     score = 0
-    for calculation in (calculate_straight, calculate_three_of_a_kind, calculate_remainder):
+    for calculation in (
+        calculate_straight,
+        calculate_three_of_a_kind,
+        calculate_remainder,
+    ):
         outcome = calculation(play)
         play = outcome[0]  # we're shrinking
         score += outcome[1]
 
     return score
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     scores = []
     with open("input.txt") as f:
         for line in f:
